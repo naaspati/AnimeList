@@ -1,0 +1,20 @@
+package none
+
+import javafx.scene.control.TabPane
+import sam.fxml.AnimeTab
+import sam.fxml.OthersTab
+import sam.fxml.DirSearch
+import sam.fxml.AnimeSearch
+
+dynamic component Insert {
+	
+	TabPane {
+		side : "BOTTOM",
+		style : "-fx-font-family:Consolas",
+		AnimeTab,  
+		OthersTab,
+		DirSearch,
+		AnimeSearch		 
+	}			
+}
+		

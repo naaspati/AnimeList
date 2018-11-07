@@ -1,0 +1,32 @@
+
+
+
+package none
+
+import sam.fxml.StringList
+import javafx.scene.control.Tab
+import javafx.scene.control.ScrollPane
+import javafx.scene.layout.VBox
+import javafx.scene.text.Text
+import sam.fxml.RelatedAnimesList
+import sam.fxml.DirList
+import sam.fxml.ListVBox
+import sam.fxml.UrlsList
+
+dynamic component OthersTab {
+	Tab {
+			text: "Others",  
+			ScrollPane {
+				fitToWidth : true,
+				VBox id othersBox {
+					spacing : 10,
+					fillWidth : true,
+					Text id othersTitleT,
+					DirList id dirList {text : "Associated Directories"},
+					ListVBox<String> id altNamesList {text : "Alternative name(s)"},
+					RelatedAnimesList id relatedAnimesList {text : "Related Animes"},
+					UrlsList id urlsList {text : "Urls"}
+				}
+		  }
+		}
+}

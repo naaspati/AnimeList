@@ -1,0 +1,44 @@
+package none
+
+import javafx.geometry.Insets
+import javafx.scene.layout.HBox
+import javafx.scene.layout.VBox
+import javafx.scene.control.Tab
+import sam.fxml.Field
+import sam.fxml.AnimeTab
+import javafx.scene.text.Text
+import javafx.scene.control.TextField
+import javafx.scene.control.Button
+import javafx.scene.control.TextArea
+
+dynamic component AnimeTab {
+	Tab {
+			VBox id aboutBox{
+				spacing : 5,
+				padding : Insets {bottom : 10,left : 5,right : 5,top : 10},
+				fillWidth : true, 
+				 
+				HBox {
+					spacing : 5,
+					Text {text : "mal_id   "},
+					TextField id idTF {editable : false, static hgrow : "ALWAYS", focusTraversable : false},
+					Button id idBtn {text : "ID", onAction : controllermethod idGO },
+					Button id multipleIdBtn {text : "Multiple ID", onAction : controllermethod multipleIdGO }
+				},
+				Field id titleF    {title : "title   "},
+				Field id episodeF {title : "episodes "},
+				Field id airedF   {title : "aired    "},
+				Field id genreF   {title : "genre    "},
+				
+				Text {text : "synopsis"},
+				TextArea id synopsisTa {editable : false, wrapText : true }
+				
+				/* TODO
+				 *, HBox {
+					Button id saveBtn {text : "SAVE", alignment : "CENTER_RIGHT", onAction : controllermethod saveAction},
+					maxWidth : const Double#MAX_VALUE
+				}
+				 */
+			}		
+		}
+}

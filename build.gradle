@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    jcenter()
+}
+
+mainClassName = 'Main'
+// mainClassName = 'sam.updater.Updater'
+
+dependencies {
+  compile 'org.xerial:sqlite-jdbc:3.7.2'
+  compile 'org.json:json:20180130'
+  compile files('myutils.jar')
+  
+}
+
+ext.appdir = file(System.env['SAM_PROGRAMS'].concat(/\anime\app/))
+
+task install(type: Copy, dependsOn:installDist) {
+  def libdir = file(new File(installDist.destinationDir, 'lib')) 
+  from libdir
+  into appdir
+  
+  doLast {
+     new File(appdir, 'run.cmd').text = """
+  @echo off
+  setlocal 
+  
+  java %JAVA_OPTS% -cp \"%~dp0${String.join(';%~dp0', libdir.list())}\" ${mainClassName} %*
+  
+  """.stripIndent()
+  } 
+}
+
+run {
+  file('java_temp').mkdirs()
+  workingDir appdir.parent
+  environment['ANIME_DIR'] = 'Anime'
+  environment['ANIME_DB'] = 'anime_db.db'
+  systemProperties['java.util.logging.config.file'] = file('logging.properties').absolutePath
+  systemProperties['java.io.tmpdir'] = file('java_temp').absolutePath
+}
+jar {
+  exclude '*.fxgraph'
+}
+defaultTasks 'install'
+
+
+
