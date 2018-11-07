@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 import sam.anime.db2.AnimeDB;
 import sam.anime.db2.RelatedAnimesImpl;
 import sam.logging.MyLoggerFactory;
+import sam.myutils.MyUtilsException;
 
 class AnimeHelper {
 	private static final Logger LOGGER = MyLoggerFactory.logger(AnimeHelper.class.getSimpleName());
@@ -20,11 +21,12 @@ class AnimeHelper {
 	private final HashMap<Integer, Anime> cachedAnime = new HashMap<>();
 	private final UnmodifiableCustomCollection<AnimeTitle> allTitles;
 	private final List<Anime> newAnime = new ArrayList<>();
-	private final TreeSet<RelatedAnimesImpl> relatedAnimes = new TreeSet<>(), relatedAnimesNew = new TreeSet<>();
+	private final UnmodifiableCustomCollection<RelatedAnimesImpl> relatedAnimes;
+	private final TreeSet<RelatedAnimesImpl> relatedAnimesNew = new TreeSet<>();
 	
 	public AnimeHelper(AnimeDB db) throws SQLException {
-		allTitles = new UnmodifiableCustomCollection<>(AnimeTitle.getAll(db), null);
-		RelatedAnimesImpl.getAll(db, relatedAnimes);
+		allTitles = new UnmodifiableCustomCollection<>(() -> MyUtilsException.noError(() -> AnimeTitle.getAll(db)), null);
+		relatedAnimes = new UnmodifiableCustomCollection<>(() -> MyUtilsException.noError(() -> RelatedAnimesImpl.getAll(db, new TreeSet<>())), null);
 	}
 	void put(int mal_id, Anime anime) {
 		cachedAnime.put(mal_id, anime);

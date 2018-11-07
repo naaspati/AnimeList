@@ -7,13 +7,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import sam.anime.db2.AnimeDB;
+import sam.myutils.MyUtilsException;
 
 class DirHelper implements ModificationListener<DirSubpath> {
 	final UnmodifiableCustomCollection<DirSubpath> allDirs;
 	private final AnimeDao dao;
 	
 	public DirHelper(AnimeDB db, AnimeDao dao) throws SQLException {
-		allDirs = new UnmodifiableCustomCollection<>(DirSubpath.getAll(db), null);
+		allDirs = new UnmodifiableCustomCollection<>(() -> MyUtilsException.noError(() -> DirSubpath.getAll(db)), null);
 		this.dao = dao;
 	}
 	public void addDir(AnimeTitle title, DirSubpath dir) {

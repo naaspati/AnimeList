@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import sam.anime.dao.ModificationListener.Type;
@@ -16,7 +17,12 @@ abstract class CustomCollection<E, C extends Collection<E>> implements Iterable<
 	@SuppressWarnings("rawtypes")
 	protected ModificationListener[] listeners; 
 	protected Anime anime;
+	private Supplier<C> dataGetter;
 
+	public CustomCollection(Supplier<C> dataGetter, Anime anime) {
+		this.dataGetter = dataGetter;
+		this.anime = anime;
+	}
 	public CustomCollection(C data, Anime anime) {
 		this.anime = anime;
 		this.data = data;
@@ -50,10 +56,21 @@ abstract class CustomCollection<E, C extends Collection<E>> implements Iterable<
 		return false;
 
 	}
+	private void load() {
+		if(dataGetter == null) return;
+		
+		Supplier<C> d = dataGetter;
+		dataGetter = null;
+		this.data = d.get();
+		this.unmodifiable = Collections.unmodifiableCollection(data);
+	}
 	public Collection<E> get() {
+		load();
 		return unmodifiable;
 	}
 	public boolean  remove(E e) {
+		load();
+		
 		boolean b = data.remove(e);
 		notifyModification(e, Type.REMOVED);
 		return b;
@@ -66,25 +83,30 @@ abstract class CustomCollection<E, C extends Collection<E>> implements Iterable<
 					m.onModify(anime, e, type);				
 			}
 		}
-
 	}
 	public boolean add(E e) {
+		load();
+		
 		boolean b = data.add(e);
 		notifyModification(e, Type.ADDED);
 		return b;
 	}
 	public boolean isEmpty() {
+		load();
 		return data.isEmpty();
 	}
 
 	@Override
 	public Iterator<E> iterator() {
+		load();
 		return data.iterator();
 	}
 	public Stream<E> stream() {
+		load();
 		return data.stream();
 	}
 	public int size() {
+		load();
 		return data.size();
 	}
 

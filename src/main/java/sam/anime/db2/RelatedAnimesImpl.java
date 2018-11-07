@@ -45,8 +45,9 @@ public class RelatedAnimesImpl implements Comparable<RelatedAnimesImpl> {
 	public int getId2(){ return this.id2; }
 
 	private static final String SELECT_ALL_SQL = "SELECT * FROM "+TABLE_NAME;
-	public static void getAll(AnimeDB db, Set<RelatedAnimesImpl> sink) throws SQLException{
+	public static Set<RelatedAnimesImpl> getAll(AnimeDB db, Set<RelatedAnimesImpl> sink) throws SQLException{
 		db.collect(SELECT_ALL_SQL, sink, RelatedAnimesImpl::new);
+		return sink;
 	}
 	private static final String FIND_BY_ID = SELECT_ALL_SQL+" WHERE "+ID+"=";
 	public static RelatedAnimesImpl getById(AnimeDB db, int id) throws SQLException {
